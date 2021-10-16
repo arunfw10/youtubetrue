@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Nav</title>
+        <link rel="stylesheet" href="dashboard-nav.css">
+    </head>
+    <style>
+        *,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1349;
+    height: 83px;
+    position: relative;
+}
+
+#logo > img {
+    width: 148px;
+    aspect-ratio: auto 148 / 40;
+    height: 40px;
+    cursor: pointer;
+}
+.nav-a {
+    position: absolute;
+}
+#nav-a-one {
+    left: 300px;
+}
+#nav-a-two {
+    left: 370px;
+}
+.nav-a > a {
+    text-decoration: none;
+    color: #44475b;
+    letter-spacing: 0.3px;
+    font-weight: 400;
+}
+.nav-a > a:hover {
+    color: #00d09c;
+}
+
+#search-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 442px;
+    height: 39px;
+    margin-left: 245px;
+    margin-right: 20px;
+    box-shadow: 0 1.5px 5px 1px hsla(0, 0%, 0%, 0.151);
+    border-radius: 3px;
+}
+
+#search-box > input {
+    border: none;
+    width: 388px;
+    height: 27px;
+    padding: 1px 2px 1px 13px;
+    font-size: 15px;
+    outline: none;
+}
+
+#search-box > img {
+    width: 19px;
+    height: 19px;
+    margin: auto 10px auto 10px;
+}
+
+#nav-sub-container {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-evenly;
+    width: 247px;
+}
+
+#user-profile {
+    width: 35px;
+    height: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+#nav-sub-container-tool {
+    position: relative;
+    z-index: 0;
+    height: 24px;
+    width: 24px;
+    margin-top:5px; 
+}
+#nav-sub-container-tool::after {
+    content: "";
+    position: absolute;
+    transition: all 0.1s ease;
+    top: 35px;
+    right: -30px;
+    /* display: none; */
+}
+#nav-sub-container-tool::before {
+    content: "";
+    position: absolute;
+    top: 26.5px;
+    right: 4px;
+    /* display: none; */
+}
+
+
+#nav-sub-container-tool:hover:before {
+    border-left: 1px solid #ecedef;
+    border-top: 1px solid #ecedef;
+    width: 16px;
+    height: 16px;
+    top: 26.5px;
+    right: 4px;
+    transform: rotate(45deg);
+    z-index: 2;
+    background: #fff;
+    display: block;
+}
+#nav-sub-container-tool:hover:after{
+    content: "You're All Caught Up";
+    padding: 80px;
+    width: 328px;
+    height: 198px;
+    top: 35px;
+    right: -30px;
+    border-radius: 5px;
+    border: 1px solid #ecedef;
+    z-index: 1;
+    background: #fff;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1),
+        -1px 1px 10px rgba(0, 0, 0, 0.1);
+    display: block;
+
+}
+#videos-div{
+      display: grid;
+      grid-template-columns: repeat(4, 25%);
+      margin: 5%;
+      grid-gap:20px;
+  }
+  #videos-div>img{
+      width:30%;
+      height: 150px;
+
+  }
+    </style>
+    <body>
+        <nav>
+            <div id="logo">
+                <img src="https://lh3.googleusercontent.com/3zkP2SYe7yYoKKe47bsNe44yTgb4Ukh__rBbwXwgkjNRe4PykGG409ozBxzxkrubV7zHKjfxq6y9ShogWtMBMPyB3jiNps91LoNH8A=s500"></div>
+           
+            <div id="search-box">
+                <input
+                    type="text"
+                    id="query"
+                    placeholder="Search videos"
+                />
+                <button onclick="searchVideos()"> search </button>
+               
+            </div>
+            <div id="nav-sub-container">
+                <div id="nav-sub-container-tool">
+                   
+                </div>
+               <img id="user-profile" src="https://img.favpng.com/25/13/19/samsung-galaxy-a8-a8-user-login-telephone-avatar-png-favpng-dqKEPfX7hPbc6SMVUCteANKwj.jpg" alt="user Profile">
+            </div>
+        </nav>
+        <div id="videos-div">
+
+        </div>
+    </body>
+</html>
+<script>
+   let container=document.getElementById("videos-div");
+   async function searchVideos() {
+      let query = document.getElementById("query").value;
+      let res = await fetch(
+        `https://youtube.googleapis.com/youtube/v3/search?q=${query}&type=video&key=AIzaSyCmpx3B8JeW90wtYnCDV258cOYgUTiPB_o&maxResults=20&part=snippet`
+      );
+
+      let data = await res.json();
+      console.log(data);
+
+      appendVideos(data.items);
+    }
+    function appendVideos(el) {
+
+el.forEach(({ id: { videoId }, snippet: { title, channelTitle} }) => {
+let div = document.createElement("div");
+div.innerHTML = `<iframe width="260" height="140" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+
+ let p = document.createElement("p"); 
+ p.textContent = title;
+ p.style.fontWeight = "bold";
+
+ let span = document.createElement("span");
+ span.textContent = channelTitle;
+ span.style.color = "gray";
+
+ let span2 = document.createElement("span");
+ span.textContent = channelTitle;
+ span.style.color = "gray";
+
+div.append(p,span,span2);
+container.append(div);
+});
+}
+</script>
